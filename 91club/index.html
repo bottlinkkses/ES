@@ -143,14 +143,9 @@
 <!-- Scroll Down Button -->
 <div class="scroll-down-btn hidden" id="scroll-down-btn">
     <!-- Make the circular image clickable and link it to Google -->
-<a href="https://t.me/WingoScript" target="_blank" style="pointer-events: none;">
-    <span onmousedown="return false;" oncontextmenu="return false;">
-        <img src="tg.png" alt="Scroll Down" class="w-12 h-12 rounded-full" style="pointer-events: auto;">
-    </span>
+<a href="https://t.me/WingoScript" target="_blank" style="pointer-events: auto; user-select: none;">
+    <img src="tg.png" alt="Scroll Down" class="w-12 h-12 rounded-full" style="pointer-events: auto; user-select: none;">
 </a>
-
-
-
 
 </div>
 
@@ -212,9 +207,8 @@
                     </div>
                     <div class="text-sm">
                         ${isPinned ? `
-                            Register a new account by clicking on "REGISTER" button. and start earning daily ! 🚀<br>
-                            "Register" बटन पर क्लिक करके एक नया 91club अकाउंट बनाए, और हमारे साथ रोज कमाना शुरू करें ।
-                        ` : isWaitMessage ? `
+                            Make a new 91club account by clicking on "REGISTER" button. and Start Earning with us daily, remember if you not create a new account then we will stop giving you predictions. 🚀<br>
+                            ` : isWaitMessage ? `
                             Wait for next period
                         ` : `
                             Wingo 1min 🥳<br>
