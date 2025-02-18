@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OK VIP Prediction</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: url('https://i.ibb.co/cstLYvj/space.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .overlay {
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.8);
+        }
+        .gradient-header {
+            background: linear-gradient(135deg, #1a1a1a, #333333);
+            height: 60px; /* Reduced height */
+        }
+        .gradient-message-box {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+        .animate-slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+        .animate-bounce {
+            animation: bounce 1s ease;
+        }
+        .message-time {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 5px;
+            text-align: right;
+        }
+        .sender-name {
+            font-size: 14px;
+            color: #39FF14; /* Neon Green Color */
+        }
+        .blue-tick {
+            width: 12px;
+            height: 12px;
+            margin-left: 5px;
+        }
+        .online-users {
+            font-size: 12px;
+            color: #39FF14; /* Neon Green Color */
+            margin-top: 2px;
+        }
+        .pinned-message {
+            position: sticky;
+            top: 60px; /* Adjusted based on reduced header height */
+            z-index: 10;
+        }
+        .scroll-down-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #39FF14;
+            color: #000;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .scroll-down-btn:hover {
+            background: #2ecc71;
+        }
+        .check-pinned-btn {
+            position: sticky;
+            top: 60px; /* Adjusted based on reduced header height */
+            background: #4a5568; /* Grey background */
+            color: white;
+            padding: 10px;
+            text-align: center;
+            width: 100%;
+            display: inline-block; /* Changed to inline-block */
+            cursor: pointer;
+            z-index: 10;
+            border-right: 2px solid #39FF14; /* Green line on the right */
+            white-space: normal; /* Allow text to wrap */
+            line-height: 1.5; /* Adjust line height for better readability */
+        }
+    </style>
+</head>
+<body class="font-sans antialiased">
+
+    <!-- Overlay -->
+    <div class="overlay fixed inset-0"></div>
+
+    <!-- Chat Container -->
+    <div class="chat-container flex flex-col h-screen bg-transparent relative">
+        <!-- Header -->
+        <div class="header flex items-center p-4 gradient-header text-white text-lg shadow-lg">
+            <!-- Logo -->
+       <img src="okwin.png" alt="Group Logo" class="w-10 h-10 rounded-full border-2 border-gray-400" style="pointer-events: none; user-select: none;">
+
+            <!-- Name and Online Users -->
+            <div class="flex flex-col ml-4">
+                <span class="font-bold text-xl">OK Win VIP Prediction</span>
+                <div id="online-users" class="online-users">• Online Users : 0</div>
+            </div>
+        </div>
+
+        <!-- Check Pinned Message Button -->
+        <div class="check-pinned-btn" id="check-pinned-btn" onclick="scrollToPinnedMessage()">
+        <p style="font-family: Verdana, sans-serif; font-size: 16px; font-weight: bold; color: white; text-align: center; text-shadow: 0 0 10px rgba(255, 0, 0, 0.6), 0 0 20px rgba(255, 0, 0, 0.4);">To Increase the accuracy of prediction, make a new <span style="color: yellow; text-shadow: 0 0 10px yellow;">OK Win</span> account by clicking on <span style="color: cyan; text-shadow: 0 0 10px cyan;">"REGISTER"</span> button.</p>
+                <button onclick="window.location.href='https://colorsignup.github.io/ES1/In999';" style="background: linear-gradient(45deg, #ff0000, #8B0000); color: white; font-size: 17px; font-weight: bold; padding: 10px 50px; border: none; border-radius: 40px; cursor: pointer; transition: 0.3s; box-shadow: 0 0 15px rgba(255, 0, 0, 0.8), 0 0 30px rgba(255, 0, 0, 0.6); text-transform: uppercase; letter-spacing: 1.5px; outline: none; position: relative; overflow: hidden;" onmouseover="this.style.background='linear-gradient(45deg, #ff4500, #b22222)'; this.style.boxShadow='0 0 25px rgba(255, 69, 0, 1), 0 0 45px rgba(255, 69, 0, 0.8)'; this.style.transform='scale(1.07)';" onmouseout="this.style.background='linear-gradient(45deg, #ff0000, #8B0000)'; this.style.boxShadow='0 0 15px rgba(255, 0, 0, 0.8), 0 0 30px rgba(255, 0, 0, 0.6)'; this.style.transform='scale(1)';">🔥 Register Now 🔥</button>
+        </div>
+
+        <!-- Messages -->
+        <div class="messages flex-1 overflow-y-auto p-4 space-y-4" id="messages">
+            <!-- Messages will be dynamically added here -->
+        </div>
+
+<!-- Scroll Down Button -->
+<div class="scroll-down-btn hidden" id="scroll-down-btn">
+    <!-- Make the circular image clickable and link it to Google -->
+<a href="https://t.me/WingoScript" target="_blank" style="pointer-events: none;">
+    <span onmousedown="return false;" oncontextmenu="return false;">
+        <img src="tg.png" alt="Scroll Down" class="w-12 h-12 rounded-full" style="pointer-events: auto;">
+    </span>
+</a>
+
+</div>
+
+    </div>
+
+    <script>
+        // Load messages from localStorage or initialize an empty array
+        let messages = JSON.parse(localStorage.getItem("messages")) || [];
+
+        // Function to generate random online users count
+        function getRandomOnlineUsers() {
+            return Math.floor(Math.random() * (30000 - 10000 + 1)) + 10000; // Random number between 1000 and 10000
+        }
+
+        // Function to update online users count
+        function updateOnlineUsers() {
+            const onlineUsersDiv = document.getElementById("online-users");
+            const randomUsers = getRandomOnlineUsers();
+            onlineUsersDiv.textContent = `• Online Users : ${randomUsers}`;
+        }
+
+        // Update online users every 2 seconds
+        setInterval(updateOnlineUsers, 2000);
+
+        // Initial update
+        updateOnlineUsers();
+
+        function getIndianTime() {
+            const now = new Date();
+            const options = { timeZone: "Asia/Kolkata", hour: "numeric", minute: "numeric", hour12: true };
+            return now.toLocaleTimeString("en-IN", options);
+        }
+
+        function getPeriodNumber() {
+            const now = new Date();
+            const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
+            const totalMinutes = now.getHours() * 60 + now.getMinutes();
+            return `${dateStr}1000${10001 + totalMinutes}`;
+        }
+
+        function getRandomResult() {
+            return Math.random() > 0.5 ? "Big" : "Small";
+        }
+
+        function addMessage(period, result, time, isPinned = false, isWaitMessage = false) {
+            const messagesDiv = document.getElementById("messages");
+            const message = document.createElement("div");
+            message.classList.add("message", "flex", "items-start", "space-x-3", "animate-slide-in");
+            if (isPinned) {
+                message.id = "pinned-message";
+            }
+
+            message.innerHTML = `
+                <img src="wingo.png" alt="User" class="w-8 h-8 rounded-full" style="pointer-events: none; user-select: none;">
+                <div class="text-box gradient-message-box p-3 rounded-lg text-white max-w-[70%] shadow-md">
+                    <div class="sender-name flex items-center font-bold mb-1">
+                        Wingo Script
+                    <img src="tick.png" alt="Verified" class="blue-tick" style="pointer-events: none; user-select: none;">
+                    </div>
+                    <div class="text-sm">
+                        ${isPinned ? `
+                            Make a new OK Win account by clicking on "REGISTER" button. and Start Earning with us daily, remember if you not create a new account then we will stop giving you predictions. 🚀<br>
+                            ` : isWaitMessage ? `
+                            Wait for next period
+                        ` : `
+                            Wingo 1min 🥳<br>
+                            Period No: <b>${period}</b><br>
+                            Result: <b>${result}</b>
+                            <p style="font-size: 10px; color: white;">यदि आपने "Register" बटन पर क्लिक करके एक नया account नहीं बनाया तो हम आपको prediction देना बंद करदेंगे ।</p>
+                            
+                        `}
+                    </div>
+                    <div class="message-time">${time}</div>
+                </div>
+            `;
+
+            messagesDiv.appendChild(message);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight; // Auto-scroll to the bottom
+            toggleScrollDownButton();
+        }
+
+        function loadMessages() {
+            const messagesDiv = document.getElementById("messages");
+            messagesDiv.innerHTML = ""; // Clear existing messages
+
+            // Load pinned message
+            const pinnedMessage = messages.find(msg => msg.isPinned);
+            if (pinnedMessage) {
+                addMessage(pinnedMessage.period, pinnedMessage.result, pinnedMessage.time, true);
+            }
+
+            // Load other messages
+            messages.forEach(msg => {
+                if (!msg.isPinned) {
+                    addMessage(msg.period, msg.result, msg.time);
+                }
+            });
+        }
+
+        function postMessage() {
+            const period = getPeriodNumber();
+            const result = getRandomResult();
+            const time = getIndianTime();
+
+            // Check if the message already exists
+            if (!messages.some(msg => msg.period === period)) {
+                messages.push({ period, result, time }); // Add to messages array
+                localStorage.setItem("messages", JSON.stringify(messages)); // Save to localStorage
+                addMessage(period, result, time); // Display the message
+            }
+        }
+
+        // Load messages on page load
+        loadMessages();
+
+        // Post new message when Indian time minute changes
+        let lastMinute = new Date().getMinutes();
+        let isFirstMinute = true;
+
+        setInterval(() => {
+            const currentMinute = new Date().getMinutes();
+            if (currentMinute !== lastMinute) {
+                if (isFirstMinute) {
+                    isFirstMinute = false; // Disable first-minute check
+                }
+                postMessage();
+                lastMinute = currentMinute;
+            }
+        }, 1000); // Check every second
+
+        // First-time user message
+        const isFirstTime = localStorage.getItem("firstTime") === null;
+        if (isFirstTime) {
+            const messagesDiv = document.getElementById("messages");
+            messagesDiv.innerHTML = ""; // Clear existing messages
+
+            // Add pinned message
+            const pinnedMessage = {
+                period: "Welcome",
+                result: "Register a new account by our VIP link to get bonuses<br>Link: <a href='https://t.me/EarningScripter1' target='_blank' class='text-blue-400 underline'>https://t.me/EarningScripter1</a>",
+                time: getIndianTime(),
+                isPinned: true
+            };
+            messages.push(pinnedMessage); // Add to messages array
+            localStorage.setItem("messages", JSON.stringify(messages)); // Save to localStorage
+            addMessage(pinnedMessage.period, pinnedMessage.result, pinnedMessage.time, true); // Display pinned message
+
+            // Add wait message
+            addMessage("Wait", "", getIndianTime(), false, true); // Add wait message
+
+            localStorage.setItem("firstTime", "false");
+        }
+
+        // Scroll to pinned message with bounce effect
+        function scrollToPinnedMessage() {
+            const pinnedMessage = document.getElementById("pinned-message");
+            if (pinnedMessage) {
+                pinnedMessage.scrollIntoView({ behavior: "smooth" });
+                pinnedMessage.classList.add("animate-bounce");
+                setTimeout(() => {
+                    pinnedMessage.classList.remove("animate-bounce");
+                }, 1000); // Remove bounce effect after 1 second
+            }
+        }
+
+        // Show/Hide scroll down button
+        function toggleScrollDownButton() {
+            const messagesDiv = document.getElementById("messages");
+            const scrollDownBtn = document.getElementById("scroll-down-btn");
+            if (messagesDiv.scrollHeight > messagesDiv.clientHeight && messagesDiv.scrollTop < messagesDiv.scrollHeight - messagesDiv.clientHeight - 10) {
+                scrollDownBtn.classList.remove("hidden");
+            } else {
+                scrollDownBtn.classList.add("hidden");
+            }
+        }
+
+        // Attach scroll event to messages container
+        const messagesDiv = document.getElementById("messages");
+        messagesDiv.addEventListener("scroll", toggleScrollDownButton);
+    </script>
+</body>
+</html>
