@@ -176,17 +176,21 @@
         // Initial update
         updateOnlineUsers();
 
-        function getIndianTime() {
+        
+        // Function to get UTC time
+        function getUTCTime() {
             const now = new Date();
-            const options = { timeZone: "Asia/Kolkata", hour: "numeric", minute: "numeric", hour12: true };
-            return now.toLocaleTimeString("en-IN", options);
+            const hours = String(now.getUTCHours()).padStart(2, '0');
+            const minutes = String(now.getUTCMinutes()).padStart(2, '0');
+            return `${hours}:${minutes}`;
         }
 
+        // Function to generate period number based on UTC time
         function getPeriodNumber() {
             const now = new Date();
-            const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
-            const totalMinutes = now.getHours() * 60 + now.getMinutes();
-            return `${dateStr}1000${10001 + totalMinutes}`;
+            const dateStr = now.toISOString().slice(0, 10).replace(/-/g, ''); // YYYYMMDD format
+            const totalMinutes = now.getUTCHours() * 60 + now.getUTCMinutes(); // Total minutes in UTC
+            return `${dateStr}1000${10001 + totalMinutes}`; // Period number format
         }
 
         function getRandomResult() {
