@@ -159,7 +159,7 @@
 
         // Function to generate random online users count
         function getRandomOnlineUsers() {
-            return Math.floor(Math.random() * (30000 - 10000 + 1)) + 10000; // Random number between 1000 and 10000
+            return Math.floor(Math.random() * (30000 - 10000 + 1)) + 10000; // Random number between 10000 and 30000
         }
 
         // Function to update online users count
@@ -175,23 +175,28 @@
         // Initial update
         updateOnlineUsers();
 
-        function getIndianTime() {
+        // Function to get UTC time
+        function getUTCTime() {
             const now = new Date();
-            const options = { timeZone: "Asia/Kolkata", hour: "numeric", minute: "numeric", hour12: true };
-            return now.toLocaleTimeString("en-IN", options);
+            const hours = String(now.getUTCHours()).padStart(2, '0');
+            const minutes = String(now.getUTCMinutes()).padStart(2, '0');
+            return `${hours}:${minutes}`;
         }
 
+        // Function to generate period number based on UTC time
         function getPeriodNumber() {
             const now = new Date();
-            const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
-            const totalMinutes = now.getHours() * 60 + now.getMinutes();
-            return `${dateStr}1000${10001 + totalMinutes}`;
+            const dateStr = now.toISOString().slice(0, 10).replace(/-/g, ''); // YYYYMMDD format
+            const totalMinutes = now.getUTCHours() * 60 + now.getUTCMinutes(); // Total minutes in UTC
+            return `${dateStr}1000${10001 + totalMinutes}`; // Period number format
         }
 
+        // Function to get random result (Big or Small)
         function getRandomResult() {
             return Math.random() > 0.5 ? "Big" : "Small";
         }
 
+        // Function to add a message to the chat
         function addMessage(period, result, time, isPinned = false, isWaitMessage = false) {
             const messagesDiv = document.getElementById("messages");
             const message = document.createElement("div");
@@ -205,19 +210,18 @@
                 <div class="text-box gradient-message-box p-3 rounded-lg text-white max-w-[70%] shadow-md">
                     <div class="sender-name flex items-center font-bold mb-1">
                         Wingo Script
-                    <img src="tick.png" alt="Verified" class="blue-tick" style="pointer-events: none; user-select: none;">
+                        <img src="tick.png" alt="Verified" class="blue-tick" style="pointer-events: none; user-select: none;">
                     </div>
                     <div class="text-sm">
                         ${isPinned ? `
-                            Make a new BigWin game account by clicking on "REGISTER" button. and Start Earning with us daily, remember if you not create a new account then we will stop giving you predictions. 🚀<br>
-                            ` : isWaitMessage ? `
+                            Make a new 91club account by clicking on "REGISTER" button. and Start Earning with us daily, remember if you not create a new account then we will stop giving you predictions. 🚀<br>
+                        ` : isWaitMessage ? `
                             Wait for next period
                         ` : `
-                            Wingo 1min 🥳<br>
+                            Wingo 1min ⏳<br>
                             Period No: <b>${period}</b><br>
                             Result: <b>${result}</b>
-                            <p style="font-size: 10px; color: white;">यदि आपने "Register" बटन पर क्लिक करके एक नया account नहीं बनाया तो हम आपको prediction देना बंद करदेंगे ।</p>
-                            
+                            <p style="font-size: 10px; color: white;">यदि आपने "Register" बटन पर क्लिक करके एक नया account नहीं बनाया तो हम आपको prediction देना बंद कर देंगे।</p>
                         `}
                     </div>
                     <div class="message-time">${time}</div>
@@ -229,6 +233,7 @@
             toggleScrollDownButton();
         }
 
+        // Function to load messages from localStorage
         function loadMessages() {
             const messagesDiv = document.getElementById("messages");
             messagesDiv.innerHTML = ""; // Clear existing messages
@@ -247,10 +252,11 @@
             });
         }
 
+        // Function to post a new message
         function postMessage() {
             const period = getPeriodNumber();
             const result = getRandomResult();
-            const time = getIndianTime();
+            const time = getUTCTime();
 
             // Check if the message already exists
             if (!messages.some(msg => msg.period === period)) {
@@ -263,12 +269,12 @@
         // Load messages on page load
         loadMessages();
 
-        // Post new message when Indian time minute changes
-        let lastMinute = new Date().getMinutes();
+        // Post new message when UTC time minute changes
+        let lastMinute = new Date().getUTCMinutes();
         let isFirstMinute = true;
 
         setInterval(() => {
-            const currentMinute = new Date().getMinutes();
+            const currentMinute = new Date().getUTCMinutes();
             if (currentMinute !== lastMinute) {
                 if (isFirstMinute) {
                     isFirstMinute = false; // Disable first-minute check
@@ -288,7 +294,7 @@
             const pinnedMessage = {
                 period: "Welcome",
                 result: "Register a new account by our VIP link to get bonuses<br>Link: <a href='https://t.me/EarningScripter1' target='_blank' class='text-blue-400 underline'>https://t.me/EarningScripter1</a>",
-                time: getIndianTime(),
+                time: getUTCTime(),
                 isPinned: true
             };
             messages.push(pinnedMessage); // Add to messages array
@@ -296,7 +302,7 @@
             addMessage(pinnedMessage.period, pinnedMessage.result, pinnedMessage.time, true); // Display pinned message
 
             // Add wait message
-            addMessage("Wait", "", getIndianTime(), false, true); // Add wait message
+            addMessage("Wait", "", getUTCTime(), false, true); // Add wait message
 
             localStorage.setItem("firstTime", "false");
         }
