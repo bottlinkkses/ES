@@ -182,19 +182,15 @@
             return now.toLocaleTimeString("en-IN", options);
         }
 
-        let periodCounter = 10001; // Initial value
-
-function getPeriodNumber() {
+        
+    function getPeriodNumber() {
     const now = new Date();
     now.setUTCMinutes(now.getMinutes()); // Ensure UTC time is used
 
     const totalMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
     const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
 
-    // Increase by 30 every period
-    periodCounter += 30;
-
-    return `${dateStr}1000${periodCounter}`;
+    return ${dateStr}1000${10001 + totalMinutes + 30};
 }
 
 
