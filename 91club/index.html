@@ -183,11 +183,15 @@
         }
 
         function getPeriodNumber() {
-            const now = new Date();
-            const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
-            const totalMinutes = now.getHours() * 60 + now.getMinutes();
-            return `${dateStr}1000${10001 + totalMinutes}`;
-        }
+    const now = new Date();
+    now.setUTCMinutes(now.getMinutes()); // Ensure UTC time is used
+
+    const totalMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
+    const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
+
+    return `${dateStr}1000${10001 + totalMinutes}`;
+}
+
 
         function getRandomResult() {
             return Math.random() > 0.5 ? "Big" : "Small";
